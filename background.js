@@ -11,8 +11,8 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			var album = request.data.album;
 			var thumbnailCoverUrl = request.data.thumbnailCoverUrl;
 
-			var logInfo = _title + " - " + _artist;
-
+			var logInfo = title + " - " + artist;
+			
 			if(title && artist && songsList.indexOf(logInfo) === -1){
 				songsList.push(logInfo);
 			}
@@ -20,4 +20,3 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     }
     return true;
 });
-
