@@ -1,26 +1,41 @@
-chrome.tabs.query({
-    url: ["*://songza.com/*"]
-}, function(tabsArray) {
-    
-    // tabsArray will contain all the songza tabs
-    // for each tab we want to inject a script to do 
-    // the stuff that we do already in the content.js script
-
-	tabsArray.forEach(function(tab){
-		console.log("Injecting script in tab: " + tab.id);
-		chrome.tabs.executeScript(tab.id, { file: "jquery-2.1.3.min.js" }, function() {
-			chrome.tabs.executeScript(tab.id, { file: "executableScript.js" });
-		});
-    });
-});
 
 $(document).ready( function() {
-	$("#like").click(function(){
-		console.log("send likeCurrentSong");
-		chrome.extension.sendMessage({
-			type: "likeCurrentSong"
+
+	chrome.tabs.query({
+		url: ["*://songza.com/*"]
+	}, function(tabsArray) {
+		
+		// tabsArray will contain all the songza tabs
+		// for each tab we want to inject a script to do 
+		// the stuff that we do already in the content.js script
+
+		tabsArray.forEach(function(tab){
+			$("#like").click(function(){
+				chrome.tabs.executeScript(tab.id, { code: "$('.thumb-up')[0].click();" });
+			});	
+			
+			$("#dislike").click(function(){
+				chrome.tabs.executeScript(tab.id, { code: "$('.thumb-down')[0].click();" });
+			});	
+			
+			$("#playpause").click(function(){
+				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-control-play-pause')[0].click();" });
+			});	
+			
+			$("#next").click(function(){
+				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-control-skip')[0].click();" });
+			});
+			
+			$("#mute").click(function(){
+				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-volume-icon')[0].click();" });
+			});
+			
+			console.log("Injecting script in tab: " + tab.id);
+			chrome.tabs.executeScript(tab.id, { file: "jquery-2.1.3.min.js" }, function() {
+				chrome.tabs.executeScript(tab.id, { file: "executableScript.js" });
+			});
 		});
-	});	
+	});
 	
 	updateSongsList();
 });

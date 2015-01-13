@@ -1,5 +1,7 @@
 // This script is called/injected everytime the user clicks on the plugin icon
 
+var test = "test";
+
 var tmpTitle = $(".miniplayer-info-track-title a").attr("title");
 var tmpArtist = $(".miniplayer-info-artist-name a").attr("title");
 var tmpThumbnailCoverUrl = $(".miniplayer-album-art").attr("src");
