@@ -20,9 +20,24 @@ $(document).ready( function() {
 		chrome.extension.sendMessage({
 			type: "likeCurrentSong"
 		});
-	});
+	});	
+	
+	updateSongsList();
 });
 
+function updateSongsList(){
+	var playedSongs = chrome.extension.getBackgroundPage().songsList;
+	
+	var playedSongsListEl = $("#played-songs-list");
+	
+	playedSongsListEl.empty();
+	
+	playedSongs.forEach(function(songInfo){
+		playedSongsListEl.append('<div class="played-song">' + 
+										songInfo +
+									'</div>');
+	});
+}
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.type) {
         case "updateSongInfo":
@@ -38,6 +53,8 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			$("#artist-name").html(artist);
 			$("#album-name").html(album);
 			$("#album-art").attr("src", thumbnailCoverUrl);
+			
+			updateSongsList();
 
         break;
 
