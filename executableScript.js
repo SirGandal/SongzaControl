@@ -22,16 +22,6 @@ if(player){
 
 updateCurrentlyPlayingSongInfo(tmpTitle, tmpArtist, tmpThumbnailCoverUrl, tmpAlbum);
 
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-    switch(request.type) {
-        case "likeCurrentSong":
-            console.log("received message: likeCurrentSong");
-            $(".thumb-up")[0].click();
-            break;
-    }
-    return true;
-});
-
 function updateCurrentlyPlayingSongInfo(title, artist, thumbnailCoverUrl, album){
 
 	var payload = {
@@ -42,6 +32,7 @@ function updateCurrentlyPlayingSongInfo(title, artist, thumbnailCoverUrl, album)
 		};
 
 	// The popup.js will listen for this message so that it can update the HTML
+	// as well as the background page to log those information so that it can be reused
 	chrome.extension.sendMessage({
 		type: "updateSongInfo",
 		data: payload
