@@ -87,6 +87,24 @@ button.song-list-like, button.song-list-liked{
 	height: 20px;
 }
 
+button.play, button.pause{
+	float: left;
+	cursor:pointer;
+    border:none;
+    background-size: 30px 30px;
+	width: 30px;
+	height: 30px;
+	margin: -4px;
+}
+
+.play{
+	background:url(./images/play.ico) no-repeat;
+}
+
+.pause{
+	background:url(./images/pause.ico) no-repeat;
+}
+
 .song-list-liked{
 	background:url(./images/liked-2.png) no-repeat;
 }

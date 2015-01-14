@@ -22,11 +22,14 @@ updateCurrentlyPlayingSongInfo(tmpTitle, tmpArtist, tmpThumbnailCoverUrl, tmpAlb
 
 function updateCurrentlyPlayingSongInfo(title, artist, thumbnailCoverUrl, album){
 
+	var playerPlayState = $(".player-state-play");
+	
 	var payload = {
 			title: title,
 			artist: artist,
 			thumbnailCoverUrl: thumbnailCoverUrl,
-			album: album
+			album: album,
+			isPlaying: playerPlayState.length > 0
 		};
 
 	// The popup.js will listen for this message so that it can update the HTML
