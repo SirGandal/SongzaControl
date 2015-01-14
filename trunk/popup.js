@@ -12,6 +12,9 @@ $(document).ready( function() {
 		tabsArray.forEach(function(tab){
 			$("#like").click(function(){
 				chrome.tabs.executeScript(tab.id, { code: "$('.thumb-up')[0].click();" });
+				chrome.extension.sendMessage({
+					type: "likeCurrentSong"
+					});
 			});	
 			
 			$("#dislike").click(function(){
@@ -43,15 +46,19 @@ $(document).ready( function() {
 function updateSongsList(){
 	var playedSongs = chrome.extension.getBackgroundPage().songsList;
 	
-	var playedSongsListEl = $("#played-songs-list");
-	
-	playedSongsListEl.empty();
-	
-	playedSongs.forEach(function(songInfo){
-		playedSongsListEl.append('<div class="played-song">' + 
-										songInfo +
-									'</div>');
-	});
+	if(playedSongs){
+		var playedSongsListEl = $("#played-songs-list");
+		
+		playedSongsListEl.empty();
+		
+		playedSongs.forEach(function(song){
+			playedSongsListEl.append('<div class="played-song">' + 
+											'<span class="played-song-title">' + song.title + '</span>' +
+											' - ' + 
+											'<span class="played-song-artist">' + song.artist + '</span>' +
+										'</div>');
+		});
+	}
 }
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.type) {
