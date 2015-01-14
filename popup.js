@@ -56,6 +56,7 @@ function updateSongsList(){
 											'<span class="played-song-title">' + song.title + '</span>' +
 											' - ' + 
 											'<span class="played-song-artist">' + song.artist + '</span>' +
+											(song.liked ? '<button title="like" class="song-list-liked">liked</button>' : '<button title="like" class="song-list-like">like</button>') +
 										'</div>');
 		});
 	}
