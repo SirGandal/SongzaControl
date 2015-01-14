@@ -1,3 +1,4 @@
+var tabId;
 $(document).ready( function() {
 	chrome.tabs.query({
 		url: ["*://songza.com/*"]
@@ -31,6 +32,7 @@ $(document).ready( function() {
 				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-volume-icon')[0].click();" });
 			});
 			
+			tabId = tab.id;
 			console.log("Injecting script in tab: " + tab.id);
 			chrome.tabs.executeScript(tab.id, { file: "jquery-2.1.3.min.js" }, function() {
 				chrome.tabs.executeScript(tab.id, { file: "executableScript.js" });
@@ -59,6 +61,21 @@ function updateSongsList(){
 					'</div>' +
 					(song.liked ? '<button title="liked" class="song-list-liked"></button>' : '<button title="like" class="song-list-like"></button>') +
 				'</div>');
+			$(".played-song:last button").click(function(event){
+				chrome.extension.sendMessage(
+				{
+					type: "likeSong",
+					data: {
+						title: song.title,
+						artist: song.artist,
+						album: song.album
+						}
+				}, function(response){
+					if(response.success){
+						$(event.target).removeClass("song-list-like").addClass("song-list-liked").attr("title", "liked");
+					}
+				});
+			});
 		});
 	}
 }
