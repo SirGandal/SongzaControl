@@ -65,6 +65,13 @@ body {
 	font-size: 1.1em;
 }
 
+.played-song-info{
+width: 230px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
 .played-song-title{
 	color: #f67600;
 	font-size: 1.1em;

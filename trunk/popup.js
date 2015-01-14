@@ -53,11 +53,13 @@ function updateSongsList(){
 		
 		playedSongs.forEach(function(song){
 			playedSongsListEl.append('<div class="played-song">' + 
+											'<div class="played-song-info">' +
 											'<span class="played-song-title">' + song.title + '</span>' +
 											' - ' + 
 											'<span class="played-song-artist">' + song.artist + '</span>' +
-											(song.liked ? '<button title="like" class="song-list-liked">liked</button>' : '<button title="like" class="song-list-like">like</button>') +
-										'</div>');
+											'</div>' +
+										(song.liked ? '<button title="like" class="song-list-liked">liked</button>' : '<button title="like" class="song-list-like">like</button>')
+										+ '</div>');
 		});
 	}
 }
