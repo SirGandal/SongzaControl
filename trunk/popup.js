@@ -1,4 +1,3 @@
-var tabId;
 $(document).ready( function() {
 	chrome.tabs.query({
 		url: ["*://songza.com/*"]
@@ -22,6 +21,11 @@ $(document).ready( function() {
 			
 			$("#playpause").click(function(){
 				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-control-play-pause')[0].click();" });
+				if($("#playpause").attr("class").indexOf("play") !== -1){
+					$("#playpause").removeClass("play").addClass("pause");
+				}else{
+					$("#playpause").removeClass("pause").addClass("play");
+				}
 			});	
 			
 			$("#next").click(function(){
@@ -32,11 +36,11 @@ $(document).ready( function() {
 				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-volume-icon')[0].click();" });
 			});
 			
-			tabId = tab.id;
 			console.log("Injecting script in tab: " + tab.id);
 			chrome.tabs.executeScript(tab.id, { file: "jquery-2.1.3.min.js" }, function() {
 				chrome.tabs.executeScript(tab.id, { file: "executableScript.js" });
 			});
+			
 		});
 	});
 	
@@ -87,6 +91,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			var artist = request.data.artist;
 			var album = request.data.album;
 			var thumbnailCoverUrl = request.data.thumbnailCoverUrl;
+			var isPlaying = request.data.isPlaying;
 			
 			console.log(title + " " + artist + " " + thumbnailCoverUrl);
 
@@ -94,6 +99,11 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			$("#artist-name").html(artist);
 			$("#album-name").html(album);
 			$("#album-art").attr("src", thumbnailCoverUrl);
+			if(isPlaying){
+				$("#playpause").removeClass("play").addClass("pause");
+			}else{
+				$("#playpause").removeClass("pause").addClass("play");
+			}
 			
 			updateSongsList();
 
