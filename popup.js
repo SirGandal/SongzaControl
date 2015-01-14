@@ -1,6 +1,4 @@
-
 $(document).ready( function() {
-
 	chrome.tabs.query({
 		url: ["*://songza.com/*"]
 	}, function(tabsArray) {
@@ -52,14 +50,15 @@ function updateSongsList(){
 		playedSongsListEl.empty();
 		
 		playedSongs.forEach(function(song){
-			playedSongsListEl.append('<div class="played-song">' + 
-											'<div class="played-song-info">' +
-											'<span class="played-song-title">' + song.title + '</span>' +
-											' - ' + 
-											'<span class="played-song-artist">' + song.artist + '</span>' +
-											'</div>' +
-										(song.liked ? '<button title="like" class="song-list-liked">liked</button>' : '<button title="like" class="song-list-like">like</button>')
-										+ '</div>');
+			playedSongsListEl.append(
+				'<div class="played-song">' + 
+					'<div class="played-song-info">' +
+						'<span class="played-song-title">' + song.title + '</span>' +
+						' - ' + 
+						'<span class="played-song-artist">' + song.artist + '</span>' +
+					'</div>' +
+					(song.liked ? '<button title="liked" class="song-list-liked"></button>' : '<button title="like" class="song-list-like"></button>') +
+				'</div>');
 		});
 	}
 }

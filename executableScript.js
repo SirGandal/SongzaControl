@@ -1,7 +1,5 @@
 // This script is called/injected everytime the user clicks on the plugin icon
 
-var test = "test";
-
 var tmpTitle = $(".miniplayer-info-track-title a").attr("title");
 var tmpArtist = $(".miniplayer-info-artist-name a").attr("title");
 var tmpThumbnailCoverUrl = $(".miniplayer-album-art").attr("src");
@@ -32,7 +30,7 @@ function updateCurrentlyPlayingSongInfo(title, artist, thumbnailCoverUrl, album)
 		};
 
 	// The popup.js will listen for this message so that it can update the HTML
-	// as well as the background page to log those information so that it can be reused
+	// as well as the background.js page to log those information so that it can be reused
 	chrome.extension.sendMessage({
 		type: "updateSongInfo",
 		data: payload
