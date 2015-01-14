@@ -66,13 +66,31 @@ body {
 }
 
 .played-song-info{
-width: 230px;
+	float: left;
+	width: 245px;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	padding-bottom: 5px;
 }
 
 .played-song-title{
 	color: #f67600;
-	font-size: 1.1em;
+}
+
+button.song-list-like, button.song-list-liked{
+	float: right;
+	cursor:pointer;
+    border:none;
+    background-size: 20px 20px;
+	width: 20px;
+	height: 20px;
+}
+
+.song-list-liked{
+	background:url(./images/liked.png) no-repeat;
+}
+
+.song-list-like{
+	background:url(./images/like.png) no-repeat;
 }
