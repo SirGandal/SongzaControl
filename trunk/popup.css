@@ -87,22 +87,32 @@ button.song-list-like, button.song-list-liked{
 	height: 20px;
 }
 
-button.play, button.pause{
+button.play, button.pause, button.next{
 	float: left;
 	cursor:pointer;
     border:none;
-    background-size: 30px 30px;
+    background-size: 280px 200px;
 	width: 30px;
 	height: 30px;
-	margin: -4px;
+	margin: -4px 0 -4px 0;
 }
 
 .play{
-	background:url(./images/play.ico) no-repeat;
+	background:url(./images/thin-round-icons.png) no-repeat;
+	background-position-x: -169px;
+	background-position-y: 0px;
 }
 
 .pause{
-	background:url(./images/pause.ico) no-repeat;
+	background:url(./images/thin-round-icons.png) no-repeat;
+	background-position-x: -85px;
+	background-position-y: 0px;
+}
+
+.next{
+	background:url(./images/thin-round-icons.png) no-repeat;
+	background-position-x: -40px;
+	background-position-y: 0px;
 }
 
 .song-list-liked{
