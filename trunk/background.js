@@ -33,6 +33,15 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 		case "likeCurrentSong": 
 			likeCurrentSong(currentSong);
 		break;
+		
+		case "likeSong": 
+			if(likeCurrentSong(request.data)){
+				sendResponse({success: true});
+			}else{
+				sendResponse({success: false});
+			}
+			
+		break;
     }
     return true;
 });
@@ -68,7 +77,7 @@ function likeCurrentSong(song){
 		song.title === title && 
 		song.album === album){
 			song.liked = true;
-			return;
+			return true;
 		}
 	}
 	
