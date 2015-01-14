@@ -88,9 +88,9 @@ button.song-list-like, button.song-list-liked{
 }
 
 .song-list-liked{
-	background:url(./images/liked.png) no-repeat;
+	background:url(./images/liked-2.png) no-repeat;
 }
 
 .song-list-like{
-	background:url(./images/like.png) no-repeat;
+	background:url(./images/add-to-liked.png) no-repeat;
 }
