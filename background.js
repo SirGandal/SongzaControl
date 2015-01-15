@@ -42,6 +42,19 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			}
 			
 		break;
+		
+		case "dislikeCurrentSong": 
+			dislikeCurrentSong(currentSong);
+		break;
+		
+		case "unlikeSong": 
+			if(unlikeCurrentSong(request.data)){
+				sendResponse({success: true});
+			}else{
+				sendResponse({success: false});
+			}
+			
+		break;
     }
     return true;
 });
@@ -77,6 +90,54 @@ function likeCurrentSong(song){
 		song.title === title && 
 		song.album === album){
 			song.liked = true;
+			return true;
+		}
+	}
+	
+	return;
+}
+
+function dislikeCurrentSong(song){
+	if(!song){return;}
+	
+	var title = song.title;
+	var artist = song.artist;
+	var album = song.album;
+
+	if(!title || !artist || !album){
+		return;
+	}
+	
+	for(var i in songsList){
+		var song = songsList[i];
+		if(song.artist === artist &&
+		song.title === title && 
+		song.album === album){
+			song.liked = false;
+			return true;
+		}
+	}
+	
+	return;
+}
+
+function unlikeCurrentSong(song){
+	if(!song){return;}
+	
+	var title = song.title;
+	var artist = song.artist;
+	var album = song.album;
+
+	if(!title || !artist || !album){
+		return;
+	}
+	
+	for(var i in songsList){
+		var song = songsList[i];
+		if(song.artist === artist &&
+		song.title === title && 
+		song.album === album){
+			song.liked = undefined;
 			return true;
 		}
 	}
