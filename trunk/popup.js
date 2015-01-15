@@ -65,7 +65,13 @@ function updateSongsList(){
 						'<span class="played-song-artist">' + song.artist + '</span>' +
 					'</div>' +
 					(song.liked ? '<button title="liked - click to unlike" class="song-list-liked"></button>' : (song.liked === undefined ? '<button title="click to like" class="song-list-like"></button>' : '<button title="disliked - click to like" class="song-list-disliked"></button>')) +
+					'<div class="panel" style="display:none;"><p>content</p></div>' +
 				'</div>');
+			
+			$(".played-song-info:last").click(function(event) {
+				$(event.target).siblings(".panel").slideToggle({duration: 200});
+			});  
+				
 			$(".played-song:last button").click(function(event){
 				if($(event.target).attr("class").indexOf("song-list-liked") !== -1){
 					// send message to set the liked property to undefined
