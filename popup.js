@@ -16,15 +16,16 @@ $(document).ready( function() {
 				chrome.tabs.executeScript(tab.id, { code: "$('.thumb-up')[0].click();" });
 				chrome.extension.sendMessage({
 					type: "likeCurrentSong"
-					});
-			});	
+				});
+				$("#like").removeClass("like").addClass("liked");
+			});
 			
 			$("#dislike").click(function(){
 				chrome.extension.sendMessage({
 					type: "dislikeCurrentSong"
-					});
-					chrome.tabs.executeScript(tab.id, { code: "$('.thumb-down')[0].click();" });
-			});	
+				});
+				chrome.tabs.executeScript(tab.id, { code: "$('.thumb-down')[0].click();" });
+			});
 			
 			$("#playpause").click(function(){
 				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-control-play-pause')[0].click();" });
@@ -33,15 +34,20 @@ $(document).ready( function() {
 				}else{
 					$("#playpause").removeClass("pause").addClass("play");
 				}
-			});	
+			});
 			
 			$("#next").click(function(){
 				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-control-skip')[0].click();" });
 			});
 			
-			$("#mute").click(function(){
+			$("#audio").click(function(){
 				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-volume-icon')[0].click();" });
-			});			
+				if($("#audio").attr("class").indexOf("playing") !== -1){
+					$("#audio").removeClass("playing").addClass("mute");
+				}else{
+					$("#audio").removeClass("mute").addClass("playing");
+				}
+			});
 		});
 	});
 	
@@ -58,19 +64,22 @@ function updateSongsList(){
 		
 		playedSongs.forEach(function(song){
 			playedSongsListEl.append(
-				'<div class="played-song">' + 
+				'<div class="played-song">' +
 					'<div class="played-song-info">' +
 						'<span class="played-song-title">' + song.title + '</span>' +
-						' - ' + 
+						' - ' +
 						'<span class="played-song-artist">' + song.artist + '</span>' +
 					'</div>' +
-					(song.liked ? '<button title="liked - click to unlike" class="song-list-liked"></button>' : (song.liked === undefined ? '<button title="click to like" class="song-list-like"></button>' : '<button title="disliked - click to like" class="song-list-disliked"></button>')) +
-					'<div class="panel" style="display:none;"><p>content</p></div>' +
+					(song.liked ? '<button class="song-list-liked"></button>' : (song.liked === undefined ? '<button class="song-list-like"></button>' : '<button class="song-list-disliked"></button>')) +
+					'<div class="panel" style="display:none;">'+
+						'<div>Number of times played: ' + song.numberOfTimesPlayed + '</div>'+
+						'<a target="_blank" href="' + encodeURI('http://grooveshark.com/#!/search?q=' + song.title + " " + song.artist) +'">Search on grooveshark</a>' +
+					'</div>' +
 				'</div>');
 			
 			$(".played-song-info:last").click(function(event) {
 				$(event.target).siblings(".panel").slideToggle({duration: 200});
-			});  
+			});
 				
 			$(".played-song:last button").click(function(event){
 				if($(event.target).attr("class").indexOf("song-list-liked") !== -1){
@@ -79,25 +88,24 @@ function updateSongsList(){
 					{
 						type: "unlikeSong",
 						data: {
-							title: song.title,
-							artist: song.artist,
-							album: song.album
+								title: song.title,
+								artist: song.artist,
+								album: song.album
 							}
 					}, function(response){
 						if(response.success){
 							$(event.target).removeClass("song-list-liked").addClass("song-list-like").attr("title", "like");
 						}
 					});
-					
 				} else if ($(event.target).attr("class").indexOf("song-list-like") !== -1 ||
 							$(event.target).attr("class").indexOf("song-list-disliked") !== -1){
 					chrome.extension.sendMessage(
 					{
 						type: "likeSong",
 						data: {
-							title: song.title,
-							artist: song.artist,
-							album: song.album
+								title: song.title,
+								artist: song.artist,
+								album: song.album
 							}
 					}, function(response){
 						if(response.success){
@@ -105,27 +113,26 @@ function updateSongsList(){
 							$(event.target).removeClass("song-list-disliked").addClass("song-list-liked").attr("title", "liked");
 						}
 					});
-				} 
+				}
 			});
 		});
 	}
 }
+
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.type) {
         case "updateSongInfo":
-
             var title = request.data.title;
 			var artist = request.data.artist;
 			var album = request.data.album;
 			var thumbnailCoverUrl = request.data.thumbnailCoverUrl;
 			var isPlaying = request.data.isPlaying;
-			
-			console.log(title + " " + artist + " " + thumbnailCoverUrl);
 
 			$("#song-name").html(title);
 			$("#artist-name").html(artist);
 			$("#album-name").html(album);
 			$("#album-art").attr("src", thumbnailCoverUrl);
+
 			if(isPlaying){
 				$("#playpause").removeClass("play").addClass("pause");
 			}else{
@@ -135,7 +142,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			updateSongsList();
 
         break;
-
     }
+
     return true;
 });

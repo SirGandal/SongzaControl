@@ -3,6 +3,7 @@
 var songsList = [];
 var percentageListenedTo = 0;
 var currentSong;
+var justUpdatedSong;
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.type) {
@@ -11,8 +12,6 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			var artist = request.data.artist;
 			var album = request.data.album;
 			var thumbnailCoverUrl = request.data.thumbnailCoverUrl;
-
-			// var logInfo = title + " - " + artist;
 			
 			currentSong = {
 				title: title,
@@ -21,41 +20,47 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 				thumbnailCoverUrl: thumbnailCoverUrl
 			};
 			
-			if(title && artist && album && !getSongFromList(title, artist, album)){
-				songsList.push(currentSong);
+			if(title && artist && album){
+				var song = getSongFromList(title, artist, album);
+				if(!song){
+					currentSong.numberOfTimesPlayed = 0;
+					songsList.push(currentSong);
+					justUpdatedSong = undefined;
+				}else if(!justUpdatedSong){
+					justUpdatedSong = currentSong;
+					updateSong({
+						numberOfTimesPlayed: song.numberOfTimesPlayed + 1,
+						liked: song.liked
+					}, song);
+				}
 			}
-			
-			// if(title && artist && songsList.indexOf(logInfo) === -1){
-				// songsList.push(logInfo);
-			// }
-        break;
+			break;
 		
-		case "likeCurrentSong": 
-			likeCurrentSong(currentSong);
-		break;
+		case "likeCurrentSong":
+			updateSong({liked: true}, currentSong);
+			break;
 		
-		case "likeSong": 
-			if(likeCurrentSong(request.data)){
+		case "likeSong":
+			if(updateSong({liked: true}, request.data)){
 				sendResponse({success: true});
 			}else{
 				sendResponse({success: false});
 			}
-			
-		break;
+			break;
 		
-		case "dislikeCurrentSong": 
-			dislikeCurrentSong(currentSong);
-		break;
+		case "dislikeCurrentSong":
+			updateSong({liked: false}, currentSong);
+			break;
 		
-		case "unlikeSong": 
-			if(unlikeCurrentSong(request.data)){
+		case "unlikeSong":
+			if(updateSong({liked: undefined}, request.data)){
 				sendResponse({success: true});
 			}else{
 				sendResponse({success: false});
 			}
-			
-		break;
+			break;
     }
+
     return true;
 });
 
@@ -64,7 +69,7 @@ function getSongFromList(title, artist, album){
 	for(var i in songsList){
 		var song = songsList[i];
 		if(song.artist === artist &&
-		song.title === title && 
+		song.title === title &&
 		song.album === album){
 			return song;
 		}
@@ -73,74 +78,35 @@ function getSongFromList(title, artist, album){
 	return;
 }
 
-function likeCurrentSong(song){
-	if(!song){return;}
-	
+function updateSong(updateObj, song){
+	if(!updateObj || !song){
+		return;
+	}
+
+	var likedUpdate = updateObj.liked;
+	var numberOfTimesPlayedUpdate = updateObj.numberOfTimesPlayed;
+
 	var title = song.title;
 	var artist = song.artist;
 	var album = song.album;
 
+	// Those are the information we use to "uniquely" identify a song
 	if(!title || !artist || !album){
 		return;
 	}
-	
+
 	for(var i in songsList){
-		var song = songsList[i];
-		if(song.artist === artist &&
-		song.title === title && 
-		song.album === album){
-			song.liked = true;
+		var tmpSong = songsList[i];
+		if(tmpSong.artist === artist &&
+		tmpSong.title === title &&
+		tmpSong.album === album){
+			tmpSong.liked = likedUpdate;
+			if(numberOfTimesPlayedUpdate){
+				tmpSong.numberOfTimesPlayed = numberOfTimesPlayedUpdate;
+			}
 			return true;
 		}
 	}
-	
-	return;
-}
 
-function dislikeCurrentSong(song){
-	if(!song){return;}
-	
-	var title = song.title;
-	var artist = song.artist;
-	var album = song.album;
-
-	if(!title || !artist || !album){
-		return;
-	}
-	
-	for(var i in songsList){
-		var song = songsList[i];
-		if(song.artist === artist &&
-		song.title === title && 
-		song.album === album){
-			song.liked = false;
-			return true;
-		}
-	}
-	
-	return;
-}
-
-function unlikeCurrentSong(song){
-	if(!song){return;}
-	
-	var title = song.title;
-	var artist = song.artist;
-	var album = song.album;
-
-	if(!title || !artist || !album){
-		return;
-	}
-	
-	for(var i in songsList){
-		var song = songsList[i];
-		if(song.artist === artist &&
-		song.title === title && 
-		song.album === album){
-			song.liked = undefined;
-			return true;
-		}
-	}
-	
 	return;
 }
