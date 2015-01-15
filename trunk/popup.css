@@ -121,8 +121,10 @@ button.play,
 button.pause,
 button.next,
 button.like,
+button.liked,
 button.dislike,
-button.mute{
+button.mute,
+button.playing{
 	float: left;
 	cursor:pointer;
     border:none;
@@ -137,8 +139,10 @@ button.play:hover,
 button.pause:hover,
 button.next:hover,
 button.like:hover,
+button.liked:hover,
 button.dislike:hover,
-button.mute:hover{
+button.mute:hover,
+button.playing:hover{
 	-webkit-filter: invert(0%);
 }
 
@@ -160,8 +164,16 @@ button:focus {outline:0;}
 	background:url(./images/Thumb-up.png) no-repeat;
 }
 
+.liked{
+	background:url(./images/Thumb-up-full.png) no-repeat;
+}
+
 .dislike{
 	background:url(./images/Thumb-down.png) no-repeat;
+}
+
+.playing{
+	background:url(./images/Audio-playing.png) no-repeat;
 }
 
 .mute{
@@ -201,4 +213,8 @@ button:focus {outline:0;}
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#33ffffff',GradientType=0 ); /* IE6-9 */
 	margin: 0 0 3px -10px;
 	width: 320px;
+	text-align: left;
+	padding-left: 18px;
+	padding-bottom: 5px;
+	font-size: 0.8em;
 }
