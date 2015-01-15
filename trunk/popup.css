@@ -46,12 +46,13 @@ body {
 	float: right;
 }
 
-#player{
+#player{ 	
 	/* background-color: rgba(255, 255, 0, 0.50); */
 	text-align: center;
 	background-color: rgba(0, 0, 0, 0.35);
-	padding: 8px;
 	border: 1px solid rgba(9, 29, 173, 0.19);
+	height: 40px;
+	padding-left: 60px;
 }
 
 #played-songs-list{
@@ -78,7 +79,7 @@ body {
 	color: #f67600;
 }
 
-button.song-list-like, button.song-list-liked{
+button.song-list-like, button.song-list-liked, button.song-list-disliked{
 	float: right;
 	cursor:pointer;
     border:none;
@@ -87,7 +88,7 @@ button.song-list-like, button.song-list-liked{
 	height: 20px;
 }
 
-button.play, button.pause, button.next{
+/* button.play, button.pause, button.next{
 	float: left;
 	cursor:pointer;
     border:none;
@@ -95,9 +96,9 @@ button.play, button.pause, button.next{
 	width: 30px;
 	height: 30px;
 	margin: -4px 0 -4px 0;
-}
+} */
 
-.play{
+/* .play{
 	background:url(./images/thin-round-icons.png) no-repeat;
 	background-position-x: -169px;
 	background-position-y: 0px;
@@ -107,18 +108,77 @@ button.play, button.pause, button.next{
 	background:url(./images/thin-round-icons.png) no-repeat;
 	background-position-x: -85px;
 	background-position-y: 0px;
-}
+} */
 
-.next{
+/* .next{
 	background:url(./images/thin-round-icons.png) no-repeat;
 	background-position-x: -40px;
 	background-position-y: 0px;
 }
+ */
+ 
+button.play,
+button.pause,
+button.next,
+button.like,
+button.dislike,
+button.mute{
+	float: left;
+	cursor:pointer;
+    border:none;
+    background-size: 30px 30px;
+	width: 30px;
+	height: 30px;
+	margin: 5px;
+	-webkit-filter: invert(100%);
+}
+
+button.play:hover,
+button.pause:hover,
+button.next:hover,
+button.like:hover,
+button.dislike:hover,
+button.mute:hover{
+	-webkit-filter: invert(0%);
+}
+
+button:focus {outline:0;}
+
+.play{
+	background:url(./images/Play.png) no-repeat;
+}
+
+.pause{
+	background:url(./images/Pause.png) no-repeat;
+}
+
+.next{
+	background:url(./images/Next.png) no-repeat;
+}
+
+.like{
+	background:url(./images/Thumb-up.png) no-repeat;
+}
+
+.dislike{
+	background:url(./images/Thumb-down.png) no-repeat;
+}
+
+.mute{
+	background:url(./images/Mute.png) no-repeat;
+}
 
 .song-list-liked{
-	background:url(./images/liked-2.png) no-repeat;
+	background:url(./images/Heart-full.png) no-repeat;
+	-webkit-filter: invert(100%);
+}
+
+.song-list-disliked{
+	background:url(./images/Heart-broken.png) no-repeat;
+	-webkit-filter: invert(100%);
 }
 
 .song-list-like{
-	background:url(./images/add-to-liked.png) no-repeat;
+	background:url(./images/Heart.png) no-repeat;
+	-webkit-filter: invert(100%);
 }

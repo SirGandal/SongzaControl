@@ -8,6 +8,10 @@ $(document).ready( function() {
 		// the stuff that we do already in the content.js script
 
 		tabsArray.forEach(function(tab){
+		console.log("Injecting script in tab: " + tab.id);
+			chrome.tabs.executeScript(tab.id, { file: "jquery-2.1.3.min.js" }, function() {
+				chrome.tabs.executeScript(tab.id, { file: "executableScript.js" });
+			});
 			$("#like").click(function(){
 				chrome.tabs.executeScript(tab.id, { code: "$('.thumb-up')[0].click();" });
 				chrome.extension.sendMessage({
@@ -16,7 +20,10 @@ $(document).ready( function() {
 			});	
 			
 			$("#dislike").click(function(){
-				chrome.tabs.executeScript(tab.id, { code: "$('.thumb-down')[0].click();" });
+				chrome.extension.sendMessage({
+					type: "dislikeCurrentSong"
+					});
+					chrome.tabs.executeScript(tab.id, { code: "$('.thumb-down')[0].click();" });
 			});	
 			
 			$("#playpause").click(function(){
@@ -34,13 +41,7 @@ $(document).ready( function() {
 			
 			$("#mute").click(function(){
 				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-volume-icon')[0].click();" });
-			});
-			
-			console.log("Injecting script in tab: " + tab.id);
-			chrome.tabs.executeScript(tab.id, { file: "jquery-2.1.3.min.js" }, function() {
-				chrome.tabs.executeScript(tab.id, { file: "executableScript.js" });
-			});
-			
+			});			
 		});
 	});
 	
@@ -63,22 +64,42 @@ function updateSongsList(){
 						' - ' + 
 						'<span class="played-song-artist">' + song.artist + '</span>' +
 					'</div>' +
-					(song.liked ? '<button title="liked" class="song-list-liked"></button>' : '<button title="like" class="song-list-like"></button>') +
+					(song.liked ? '<button title="liked - click to unlike" class="song-list-liked"></button>' : (song.liked === undefined ? '<button title="click to like" class="song-list-like"></button>' : '<button title="disliked - click to like" class="song-list-disliked"></button>')) +
 				'</div>');
 			$(".played-song:last button").click(function(event){
-				chrome.extension.sendMessage(
-				{
-					type: "likeSong",
-					data: {
-						title: song.title,
-						artist: song.artist,
-						album: song.album
+				if($(event.target).attr("class").indexOf("song-list-liked") !== -1){
+					// send message to set the liked property to undefined
+					chrome.extension.sendMessage(
+					{
+						type: "unlikeSong",
+						data: {
+							title: song.title,
+							artist: song.artist,
+							album: song.album
+							}
+					}, function(response){
+						if(response.success){
+							$(event.target).removeClass("song-list-liked").addClass("song-list-like").attr("title", "like");
 						}
-				}, function(response){
-					if(response.success){
-						$(event.target).removeClass("song-list-like").addClass("song-list-liked").attr("title", "liked");
-					}
-				});
+					});
+					
+				} else if ($(event.target).attr("class").indexOf("song-list-like") !== -1 ||
+							$(event.target).attr("class").indexOf("song-list-disliked") !== -1){
+					chrome.extension.sendMessage(
+					{
+						type: "likeSong",
+						data: {
+							title: song.title,
+							artist: song.artist,
+							album: song.album
+							}
+					}, function(response){
+						if(response.success){
+							$(event.target).removeClass("song-list-like").addClass("song-list-liked").attr("title", "liked");
+							$(event.target).removeClass("song-list-disliked").addClass("song-list-liked").attr("title", "liked");
+						}
+					});
+				} 
 			});
 		});
 	}
