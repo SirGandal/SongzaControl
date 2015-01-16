@@ -60,6 +60,8 @@ function updateSongsList(){
 	if(playedSongs){
 		var playedSongsListEl = $("#played-songs-list");
 		
+		//TODO: Improve, there is no need of emptying the list and then filling it again
+		
 		playedSongsListEl.empty();
 		
 		playedSongs.forEach(function(song){
@@ -67,8 +69,7 @@ function updateSongsList(){
 				'<div class="played-song">' +
 					'<div class="played-song-info">' +
 						'<span class="played-song-title">' + song.title + '</span>' +
-						' - ' +
-						'<span class="played-song-artist">' + song.artist + '</span>' +
+						'<span class="played-song-artist">' + " - " + song.artist + '</span>' +
 					'</div>' +
 					(song.liked ? '<button class="song-list-liked"></button>' : (song.liked === undefined ? '<button class="song-list-like"></button>' : '<button class="song-list-disliked"></button>')) +
 					'<div class="panel" style="display:none;">'+
@@ -78,11 +79,16 @@ function updateSongsList(){
 				'</div>');
 			
 			$(".played-song-info:last").click(function(event) {
-				$(event.target).siblings(".panel").slideToggle({duration: 200});
+				if($(event.target).parent().hasClass("panel-expanded")){
+					$(event.target).parent().removeClass("panel-expanded");
+				}else{
+					$(event.target).parent().addClass("panel-expanded");
+				}
+				$(event.target).parent().siblings(".panel").slideToggle({duration: 200});
 			});
 				
 			$(".played-song:last button").click(function(event){
-				if($(event.target).attr("class").indexOf("song-list-liked") !== -1){
+				if($(event.target).hasClass("song-list-liked")){
 					// send message to set the liked property to undefined
 					chrome.extension.sendMessage(
 					{
@@ -97,8 +103,8 @@ function updateSongsList(){
 							$(event.target).removeClass("song-list-liked").addClass("song-list-like").attr("title", "like");
 						}
 					});
-				} else if ($(event.target).attr("class").indexOf("song-list-like") !== -1 ||
-							$(event.target).attr("class").indexOf("song-list-disliked") !== -1){
+				} else if ($(event.target).hasClass("song-list-like") ||
+							$(event.target).hasClass("song-list-disliked")){
 					chrome.extension.sendMessage(
 					{
 						type: "likeSong",
@@ -116,6 +122,9 @@ function updateSongsList(){
 				}
 			});
 		});
+		
+		// TODO: change to scroll automatically to playing song and highlight it
+		playedSongsListEl.animate({ scrollTop: playedSongsListEl[0].scrollHeight}, 1000);
 	}
 }
 
