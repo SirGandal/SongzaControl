@@ -7,6 +7,14 @@ chrome.storage.sync.get("songzaControlSongsList", function(items){
 	}
 });
 
+function getStoredSongs(){
+	chrome.storage.sync.get("songzaControlSongsList", function(items){
+		if(items && items.songzaControlSongsList){
+			return items.songzaControlSongsList;
+		}
+	}); 
+}
+
 var percentageListenedTo = 0;
 var currentSong;
 
