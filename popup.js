@@ -1,3 +1,34 @@
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+    switch(request.type) {
+        case "updateSongInfo":
+        case "popupOpen":
+        	// Get the information about the currently song playing from the message
+            var title = request.data.title;
+			var artist = request.data.artist;
+			var album = request.data.album;
+			var thumbnailCoverUrl = request.data.thumbnailCoverUrl;
+			var isPlaying = request.data.isPlaying;
+
+			// Modify the html to reflect the information
+			$("#song-name").html(title);
+			$("#artist-name").html(artist);
+			$("#album-name").html(album);
+			$("#album-art").attr("src", thumbnailCoverUrl);
+
+			if(isPlaying){
+				$("#playpause").removeClass("play").addClass("pause");
+			}else{
+				$("#playpause").removeClass("pause").addClass("play");
+			}
+			
+			updateSongsList();
+
+        break;
+    }
+
+    return true;
+});
+
 $(document).ready( function() {
 	chrome.tabs.query({
 		url: ["*://songza.com/*"]
@@ -7,11 +38,14 @@ $(document).ready( function() {
 		// for each tab we want to inject a script to do 
 		// the stuff that we do already in the content.js script
 
+		//TODO: we might have multiple songza tabs, deal with that
+
 		tabsArray.forEach(function(tab){
 		console.log("Injecting script in tab: " + tab.id);
 			chrome.tabs.executeScript(tab.id, { file: "jquery-2.1.3.min.js" }, function() {
-				chrome.tabs.executeScript(tab.id, { file: "executableScript.js" });
+				chrome.tabs.executeScript(tab.id, { file: "utils.js" }, chrome.tabs.executeScript(tab.id, { file: "executableScript.js" }));
 			});
+
 			$("#like").click(function(){
 				chrome.tabs.executeScript(tab.id, { code: "$('.thumb-up')[0].click();" });
 				chrome.extension.sendMessage({
@@ -51,11 +85,40 @@ $(document).ready( function() {
 		});
 	});
 	
-	updateSongsList();
+	var tmpTitle = $("#song-name").html();
+	var tmpArtist = $("#artist-name").html();
+	var tmpAlbum = $("#album-name").html();
+	
+	updateSongsList({
+		title: tmpTitle,
+		artist: tmpArtist,
+		album: tmpAlbum
+		});
 });
 
-function updateSongsList(){
+function getSongFromList(songsList, title, artist, album){
+
+	for(var i in songsList){
+		var song = songsList[i];
+		if(song.artist === artist &&
+		song.title === title &&
+		song.album === album){
+			return song;
+		}
+	}
+	
+	return;
+}
+
+
+function updateSongsList(s){
 	var playedSongs = chrome.extension.getBackgroundPage().songsList;
+	
+	var playedSongsListEl = $("#played-songs-list");
+	if(playedSongsListEl.children().length > 0){
+		// append
+	}
+	
 	
 	if(playedSongs){
 		var playedSongsListEl = $("#played-songs-list");
@@ -127,31 +190,3 @@ function updateSongsList(){
 		playedSongsListEl.animate({ scrollTop: playedSongsListEl[0].scrollHeight}, 1000);
 	}
 }
-
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-    switch(request.type) {
-        case "updateSongInfo":
-            var title = request.data.title;
-			var artist = request.data.artist;
-			var album = request.data.album;
-			var thumbnailCoverUrl = request.data.thumbnailCoverUrl;
-			var isPlaying = request.data.isPlaying;
-
-			$("#song-name").html(title);
-			$("#artist-name").html(artist);
-			$("#album-name").html(album);
-			$("#album-art").attr("src", thumbnailCoverUrl);
-
-			if(isPlaying){
-				$("#playpause").removeClass("play").addClass("pause");
-			}else{
-				$("#playpause").removeClass("pause").addClass("play");
-			}
-			
-			updateSongsList();
-
-        break;
-    }
-
-    return true;
-});

@@ -3,39 +3,25 @@
 var songsList = [];
 var percentageListenedTo = 0;
 var currentSong;
-var justUpdatedSong;
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.type) {
         case "updateSongInfo":
-            var title = request.data.title;
-			var artist = request.data.artist;
-			var album = request.data.album;
-			var thumbnailCoverUrl = request.data.thumbnailCoverUrl;
-			
-			currentSong = {
-				title: title,
-				artist: artist,
-				album: album,
-				thumbnailCoverUrl: thumbnailCoverUrl
-			};
-			
-			if(title && artist && album){
-				var song = getSongFromList(title, artist, album);
-				if(!song){
-					currentSong.numberOfTimesPlayed = 0;
-					songsList.push(currentSong);
-					justUpdatedSong = undefined;
-				}else if(!justUpdatedSong){
-					justUpdatedSong = currentSong;
-					updateSong({
-						numberOfTimesPlayed: song.numberOfTimesPlayed + 1,
-						liked: song.liked
-					}, song);
-				}
+            
+			currentSong = request.data;
+			var existingSong = getSongFromList(currentSong);
+
+			if(existingSong){
+				updateSong({
+						numberOfTimesPlayed: existingSong.numberOfTimesPlayed + 1,
+						liked: existingSong.liked
+					}, existingSong);
+			}else{
+				currentSong.numberOfTimesPlayed = 1;
+				songsList.push(currentSong);
 			}
 			break;
-		
+
 		case "likeCurrentSong":
 			updateSong({liked: true}, currentSong);
 			break;
@@ -64,14 +50,14 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
 });
 
-function getSongFromList(title, artist, album){
+function getSongFromList(song){
 
 	for(var i in songsList){
-		var song = songsList[i];
-		if(song.artist === artist &&
-		song.title === title &&
-		song.album === album){
-			return song;
+		var s = songsList[i];
+		if(s.title === song.title && 
+			s.artist === song.artist && 
+			s.album === song.album){
+			return s;
 		}
 	}
 	
@@ -85,7 +71,6 @@ function updateSong(updateObj, song){
 
 	var likedUpdate = updateObj.liked;
 	var numberOfTimesPlayedUpdate = updateObj.numberOfTimesPlayed;
-
 	var title = song.title;
 	var artist = song.artist;
 	var album = song.album;
@@ -97,13 +82,16 @@ function updateSong(updateObj, song){
 
 	for(var i in songsList){
 		var tmpSong = songsList[i];
-		if(tmpSong.artist === artist &&
-		tmpSong.title === title &&
-		tmpSong.album === album){
+		if(tmpSong.title === title && 
+			tmpSong.artist === artist &&
+			tmpSong.album === album){
+
 			tmpSong.liked = likedUpdate;
+
 			if(numberOfTimesPlayedUpdate){
 				tmpSong.numberOfTimesPlayed = numberOfTimesPlayedUpdate;
 			}
+
 			return true;
 		}
 	}
