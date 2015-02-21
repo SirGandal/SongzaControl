@@ -52,7 +52,7 @@ body {
 	background-color: rgba(0, 0, 0, 0.35);
 	border: 1px solid rgba(9, 29, 173, 0.19);
 	height: 40px;
-	padding-left: 60px;
+	padding-left: 45px;
 }
 
 #played-songs-list{
@@ -126,6 +126,7 @@ button.like,
 button.liked,
 button.dislike,
 button.mute,
+button.liked-summary,
 button.playing{
 	float: left;
 	cursor:pointer;
@@ -137,6 +138,8 @@ button.playing{
 	-webkit-filter: invert(100%);
 }
 
+
+
 button.play:hover,
 button.pause:hover,
 button.next:hover,
@@ -144,6 +147,7 @@ button.like:hover,
 button.liked:hover,
 button.dislike:hover,
 button.mute:hover,
+button.liked-summary:hover,
 button.playing:hover{
 	-webkit-filter: invert(0%);
 }
@@ -180,6 +184,14 @@ button:focus {outline:0;}
 
 .mute{
 	background:url(./images/Mute.png) no-repeat;
+}
+
+.mute{
+	background:url(./images/Mute.png) no-repeat;
+}
+
+.liked-summary{
+	background:url(./images/DownloadSummary.png) no-repeat;
 }
 
 .song-list-liked{

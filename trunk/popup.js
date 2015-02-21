@@ -82,6 +82,10 @@ $(document).ready( function() {
 					$("#audio").removeClass("mute").addClass("playing");
 				}
 			});
+
+			$("#liked-summary").click(function(){
+				chrome.tabs.create({url: "newtab.html"});
+			});
 		});
 	});
 	
@@ -186,7 +190,12 @@ function updateSongsList(s){
 			});
 		});
 		
+		// find the node corresponding to the playing song
+		
+
 		// TODO: change to scroll automatically to playing song and highlight it
 		playedSongsListEl.animate({ scrollTop: playedSongsListEl[0].scrollHeight}, 1000);
+
+
 	}
 }
