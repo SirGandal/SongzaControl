@@ -7,14 +7,6 @@ chrome.storage.sync.get("songzaControlSongsList", function(items){
 	}
 });
 
-function getStoredSongs(){
-	chrome.storage.sync.get("songzaControlSongsList", function(items){
-		if(items && items.songzaControlSongsList){
-			return items.songzaControlSongsList;
-		}
-	}); 
-}
-
 var percentageListenedTo = 0;
 var currentSong;
 
@@ -33,10 +25,9 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			}else{
 				currentSong.numberOfTimesPlayed = 1;
 				songsList.push(currentSong);
-				
-				// update storage
-				chrome.storage.sync.set({'songzaControlSongsList': songsList}, function() {});
 			}
+			// update storage
+			chrome.storage.sync.set({'songzaControlSongsList': songsList}, function() {});
 			break;
 
 		case "likeCurrentSong":
