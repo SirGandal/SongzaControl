@@ -11,6 +11,7 @@ $(document).ready( function() {
 				songsList.forEach(function(song){
 					if(song.liked){
 						songsListEl.append('<tr' + ((index % 2 === 0) ? "" : ' class="even"') + '>' +
+												'<td><img src="' + song.thumbnailCoverUrl + '"></td>' +
 												'<td>' + song.title + '</td>' +
 												'<td>' + song.artist + '</td>' +
 												'<td>' + ((song.album.indexOf("from ") === 0) ? song.album.substr("from ".length, song.album.length) : song.album) + '</td>' +
