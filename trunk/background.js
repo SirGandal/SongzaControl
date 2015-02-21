@@ -1,6 +1,12 @@
 //chrome.browserAction.setBadgeText({text: " SC "});
 
 var songsList = [];
+chrome.storage.sync.get("songzaControlSongsList", function(items){
+	if(items && items.songzaControlSongsList && items.songzaControlSongsList.length > 0){
+		songsList = items.songzaControlSongsList;
+	}
+});
+
 var percentageListenedTo = 0;
 var currentSong;
 
@@ -19,6 +25,9 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			}else{
 				currentSong.numberOfTimesPlayed = 1;
 				songsList.push(currentSong);
+				
+				// update storage
+				chrome.storage.sync.set({'songzaControlSongsList': songsList}, function() {});
 			}
 			break;
 
