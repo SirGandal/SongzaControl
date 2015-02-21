@@ -1,30 +1,34 @@
 // var percentageListenedTo = 0;
 // var songsList = [];
 
-// $(document).ready( function() {
-    // alert("dom loaded");
-	
-	// // removed for testing
-	// //$("#player").bind('DOMNodeInserted DOMNodeRemoved', onNodeInsertedOrRemoved);
-// });
+//This script is called whenever a new page/tab is opened and matches the criteria in the manifest.json
 
-// function onNodeInsertedOrRemoved(event){
+//When the popup.js is active this script looks like is not active
+var currentSong;
 
-		// var currentTimePercentage = Math.ceil(( 100 * parseFloat($('.miniplayer-timeline-current-time').css('width')) / parseFloat($('.miniplayer-timeline-current-time').parent().css('width')) ));
-		
-		// if(currentTimePercentage !== "0"){
-			// percentageListenedTo = currentTimePercentage;
-		// }
-		
-        // var title = $(".miniplayer-info-track-title a").attr("title");
-        // var artist = $(".miniplayer-info-artist-name a").attr("title");
-        
-		// var logInfo = title + " - " + artist;
-		
-		// if(title && artist && songsList.indexOf(logInfo) === -1){
-			// // console.log("% listened : " + percentageListenedTo);
-			// songsList.push(logInfo);
-			// alert(title + " - " + artist);
-			// percentageListenedTo = 0;
-		// }
-// }
+$(document).ready( function() {
+    console.log("content.js - DOM was loaded, binding player to NodeRemoved and NodeInserted events");
+
+	var player = $("#player");
+
+	if(player){
+		$("#player").unbind();
+
+		$("#player").bind('DOMNodeInserted DOMNodeRemoved', function(event){
+
+			currentSong = getPlayerInfo();
+			
+			if(currentSong){
+				console.log("%s  - %s - %s - %s", currentSong.title, currentSong.artist, currentSong.album, currentSong.thumbnailCoverUrl);
+
+				updateCurrentlyPlayingSongInfo(currentSong);
+
+				$("#player").unbind();
+				$("#player").bind('DOMNodeInserted DOMNodeRemoved', onNodeInsertedOrRemoved);
+			}
+
+		});
+	}else{
+		console.log("content.js - ERROR in bounding #player to DOMNodeInserted DOMNodeRemoved");
+	}
+});
