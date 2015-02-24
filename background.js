@@ -25,9 +25,9 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			}else{
 				currentSong.numberOfTimesPlayed = 1;
 				songsList.push(currentSong);
+
+				chrome.storage.sync.set({'songzaControlSongsList': songsList}, function() {});
 			}
-			// update storage
-			chrome.storage.sync.set({'songzaControlSongsList': songsList}, function() {});
 			break;
 
 		case "likeCurrentSong":
@@ -90,7 +90,7 @@ function updateSong(updateObj, song){
 
 	for(var i in songsList){
 		var tmpSong = songsList[i];
-		if(tmpSong.title === title && 
+		if(tmpSong.title === title &&
 			tmpSong.artist === artist &&
 			tmpSong.album === album){
 
@@ -99,6 +99,8 @@ function updateSong(updateObj, song){
 			if(numberOfTimesPlayedUpdate){
 				tmpSong.numberOfTimesPlayed = numberOfTimesPlayedUpdate;
 			}
+
+			chrome.storage.sync.set({'songzaControlSongsList': songsList}, function() {});
 
 			return true;
 		}

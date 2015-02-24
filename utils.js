@@ -24,8 +24,8 @@ function onNodeInsertedOrRemoved(event){
 
 		var song = getPlayerInfo();
 			
-		if(song && currentSong && 
-			song.title !== currentSong.title && 
+		if(song && currentSong &&
+			song.title !== currentSong.title &&
 			song.artist !== currentSong.artist &&
 			song.album !== currentSong.album){
 
@@ -41,7 +41,7 @@ function onNodeInsertedOrRemoved(event){
 function getPlayerInfo(){
 	var _title = $(".miniplayer-info-track-title a").attr("title");
     var _artist = $(".miniplayer-info-artist-name a").attr("title");
-   	var _thumbnailCoverUrl = $(".miniplayer-album-art").attr("src");
+	var _thumbnailCoverUrl = $(".miniplayer-album-art").attr("src");
 	var _album = $(".miniplayer-info-album-title").text();
 	var _isPlaying = $(".player-state-play").length > 0;
 

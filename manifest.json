@@ -10,7 +10,7 @@
     "permissions" : [
     	"tabs",
         "storage",
-    	"*://songza.com/*", // cross-origin permission
+    	"*://songza.com/*",
     	"*://ajax.googleapis.com/*"
     ],
 	"background": {
