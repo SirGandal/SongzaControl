@@ -71,7 +71,9 @@ $(document).ready( function() {
 			});
 			
 			$("#next").click(function(){
-				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-control-skip')[0].click();" });
+				chrome.tabs.executeScript(tab.id, { code: "$('.miniplayer-control-skip')[0].click();" }, function(){
+					//Check if there is an error message
+				});
 			});
 			
 			$("#audio").click(function(){
